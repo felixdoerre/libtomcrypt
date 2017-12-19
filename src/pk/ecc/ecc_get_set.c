@@ -9,18 +9,27 @@
 
 #include "tomcrypt.h"
 
-/**
-  @file ecc_test.c
-  ECC Crypto, Tom St Denis
-*/
-
 #ifdef LTC_MECC
 
-int ecc_test(void)
+int ecc_get_set_by_name(const char* name, const ltc_ecc_set_type** dp)
 {
-   /* the main ECC tests are in tests/ecc_test.c
-    * this function is kept just for API compatibility
-    */
+   int i;
+
+   LTC_ARGCHK(dp != NULL);
+   LTC_ARGCHK(name != NULL);
+
+   *dp = NULL;
+
+   for (i = 0; ltc_ecc_sets[i].name != NULL; i++) {
+      if (XSTRCMP(ltc_ecc_sets[i].name, name) == 0) break;
+   }
+
+   if (ltc_ecc_sets[i].name == NULL) {
+      /* not found */
+      return CRYPT_INVALID_ARG;
+   }
+
+   *dp = &ltc_ecc_sets[i];
    return CRYPT_OK;
 }
 
@@ -29,4 +38,3 @@ int ecc_test(void)
 /* ref:         $Format:%D$ */
 /* git commit:  $Format:%H$ */
 /* commit time: $Format:%ai$ */
-
