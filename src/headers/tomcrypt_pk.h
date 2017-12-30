@@ -32,7 +32,9 @@ int rand_bn_upto(void *N, void *limit, prng_state *prng, int wprng);
 
 enum public_key_algorithms {
    PKA_RSA,
-   PKA_DSA
+   PKA_DSA,
+   PKA_EC,
+   PKA_EC_PRIMEF
 };
 
 typedef struct Oid {
@@ -357,6 +359,11 @@ int  ecc_import_ex(const unsigned char *in, unsigned long inlen, ecc_key *key, c
 int ecc_ansi_x963_export(ecc_key *key, unsigned char *out, unsigned long *outlen);
 int ecc_ansi_x963_import(const unsigned char *in, unsigned long inlen, ecc_key *key);
 int ecc_ansi_x963_import_ex(const unsigned char *in, unsigned long inlen, ecc_key *key, const ltc_ecc_curve *cu);
+
+int ecc_export_openssl(unsigned char *out, unsigned long *outlen, int type, ecc_key *key);
+int ecc_import_openssl(const unsigned char *in, unsigned long inlen, ecc_key *key);
+int ecc_import_pkcs8(const unsigned char *in, unsigned long inlen, const void *pwd, unsigned long pwdlen, ecc_key *key);
+int ecc_import_x509(const unsigned char *in, unsigned long inlen, ecc_key *key);
 
 int  ecc_shared_secret(ecc_key *private_key, ecc_key *public_key,
                        unsigned char *out, unsigned long *outlen);
