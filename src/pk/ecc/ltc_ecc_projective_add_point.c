@@ -29,7 +29,7 @@
 int ltc_ecc_projective_add_point(const ecc_point *P, const ecc_point *Q, ecc_point *R, void *ma, void *modulus, void *mp)
 {
    void  *t1, *t2, *x, *y, *z;
-   int    err;
+   int    err, inf;
 
    LTC_ARGCHK(P       != NULL);
    LTC_ARGCHK(Q       != NULL);
@@ -41,7 +41,8 @@ int ltc_ecc_projective_add_point(const ecc_point *P, const ecc_point *Q, ecc_poi
       return err;
    }
 
-   if (ltc_ecc_is_point_at_infinity(P, modulus)) {
+   if ((err = ltc_ecc_is_point_at_infinity(P, modulus, &inf)) != CRYPT_OK) return err;
+   if (inf) {
       /* P is point at infinity >> Result = Q */
       if ((err = ltc_mp.copy(Q->x, R->x)) != CRYPT_OK)                         { goto done; }
       if ((err = ltc_mp.copy(Q->y, R->y)) != CRYPT_OK)                         { goto done; }
@@ -49,7 +50,8 @@ int ltc_ecc_projective_add_point(const ecc_point *P, const ecc_point *Q, ecc_poi
       goto done; /* CRYPT_OK */
    }
 
-   if (ltc_ecc_is_point_at_infinity(Q, modulus)) {
+   if ((err = ltc_ecc_is_point_at_infinity(Q, modulus, &inf)) != CRYPT_OK) return err;
+   if (inf) {
       /* Q is point at infinity >> Result = P */
       if ((err = ltc_mp.copy(P->x, R->x)) != CRYPT_OK)                         { goto done; }
       if ((err = ltc_mp.copy(P->y, R->y)) != CRYPT_OK)                         { goto done; }

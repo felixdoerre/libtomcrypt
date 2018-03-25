@@ -430,6 +430,7 @@ static int tfm_ecc_projective_dbl_point(const ecc_point *P, ecc_point *R, void *
 {
    fp_int t1, t2;
    fp_digit mp;
+   int err, inf;
 
    LTC_ARGCHK(P       != NULL);
    LTC_ARGCHK(R       != NULL);
@@ -447,7 +448,8 @@ static int tfm_ecc_projective_dbl_point(const ecc_point *P, ecc_point *R, void *
       fp_copy(P->z, R->z);
    }
 
-   if (ltc_ecc_is_point_at_infinity(P, modulus)) {
+   if ((err = ltc_ecc_is_point_at_infinity(P, modulus, &inf)) != CRYPT_OK) return err;
+   if (inf) {
       /* if P is point at infinity >> Result = point at infinity */
       ltc_mp.set_int(R->x, 1);
       ltc_mp.set_int(R->y, 1);
@@ -583,6 +585,7 @@ static int tfm_ecc_projective_add_point(const ecc_point *P, const ecc_point *Q, 
 {
    fp_int  t1, t2, x, y, z;
    fp_digit mp;
+   int err, inf;
 
    LTC_ARGCHK(P       != NULL);
    LTC_ARGCHK(Q       != NULL);
@@ -598,7 +601,8 @@ static int tfm_ecc_projective_add_point(const ecc_point *P, const ecc_point *Q, 
    fp_init(&y);
    fp_init(&z);
 
-   if (ltc_ecc_is_point_at_infinity(P, modulus)) {
+   if ((err = ltc_ecc_is_point_at_infinity(P, modulus, &inf)) != CRYPT_OK) return err;
+   if (inf) {
       /* P is point at infinity >> Result = Q */
       ltc_mp.copy(Q->x, R->x);
       ltc_mp.copy(Q->y, R->y);
@@ -606,7 +610,8 @@ static int tfm_ecc_projective_add_point(const ecc_point *P, const ecc_point *Q, 
       return CRYPT_OK;
    }
 
-   if (ltc_ecc_is_point_at_infinity(Q, modulus)) {
+   if ((err = ltc_ecc_is_point_at_infinity(Q, modulus, &inf)) != CRYPT_OK) return err;
+   if (inf) {
       /* Q is point at infinity >> Result = P */
       ltc_mp.copy(P->x, R->x);
       ltc_mp.copy(P->y, R->y);

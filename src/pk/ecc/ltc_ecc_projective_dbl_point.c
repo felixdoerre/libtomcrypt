@@ -46,7 +46,7 @@
 int ltc_ecc_projective_dbl_point(const ecc_point *P, ecc_point *R, void *ma, void *modulus, void *mp)
 {
    void *t1, *t2;
-   int   err;
+   int   err, inf;
 
    LTC_ARGCHK(P       != NULL);
    LTC_ARGCHK(R       != NULL);
@@ -63,7 +63,8 @@ int ltc_ecc_projective_dbl_point(const ecc_point *P, ecc_point *R, void *ma, voi
       if ((err = mp_copy(P->z, R->z)) != CRYPT_OK)                                { goto done; }
    }
 
-   if (ltc_ecc_is_point_at_infinity(P, modulus)) {
+   if ((err = ltc_ecc_is_point_at_infinity(P, modulus, &inf)) != CRYPT_OK) return err;
+   if (inf) {
       /* if P is point at infinity >> Result = point at infinity */
       if ((err = ltc_mp.set_int(R->x, 1)) != CRYPT_OK)                            { goto done; }
       if ((err = ltc_mp.set_int(R->y, 1)) != CRYPT_OK)                            { goto done; }

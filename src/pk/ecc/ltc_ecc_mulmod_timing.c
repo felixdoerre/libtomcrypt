@@ -31,7 +31,7 @@
 int ltc_ecc_mulmod(void *k, const ecc_point *G, ecc_point *R, void *a, void *modulus, int map)
 {
    ecc_point *tG, *M[3];
-   int        i, j, err;
+   int        i, j, err, inf;
    void       *mp = NULL, *mu = NULL, *ma = NULL, *a_plus3 = NULL;
    ltc_mp_digit buf;
    int        bitcnt, mode, digidx;
@@ -41,7 +41,8 @@ int ltc_ecc_mulmod(void *k, const ecc_point *G, ecc_point *R, void *a, void *mod
    LTC_ARGCHK(R       != NULL);
    LTC_ARGCHK(modulus != NULL);
 
-   if (ltc_ecc_is_point_at_infinity(G, modulus)) {
+   if ((err = ltc_ecc_is_point_at_infinity(G, modulus, &inf)) != CRYPT_OK) return err;
+   if (inf) {
       /* return the point at infinity */
       if ((err = mp_set(R->x, 1)) != CRYPT_OK) { return err; }
       if ((err = mp_set(R->y, 1)) != CRYPT_OK) { return err; }
