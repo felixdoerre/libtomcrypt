@@ -78,12 +78,14 @@ int ecc_encrypt_key(const unsigned char *in,   unsigned long inlen,
     }
 
     pubkeysize = ECC_BUF_SIZE;
-#ifdef USE_TFM
-    /* XXX-FIXME: TFM does not support sqrtmod_prime */
-    if ((err = ecc_get_key(pub_expt, &pubkeysize, PK_PUBLIC, &pubkey)) != CRYPT_OK) {
-#else
-    if ((err = ecc_get_key(pub_expt, &pubkeysize, PK_PUBLIC|PK_COMPRESSED, &pubkey)) != CRYPT_OK) {
-#endif
+    if (ltc_mp.sqrtmod_prime != NULL) {
+       /* PK_COMPRESSED requires sqrtmod_prime */
+       err = ecc_get_key(pub_expt, &pubkeysize, PK_PUBLIC|PK_COMPRESSED, &pubkey);
+    }
+    else {
+       err = ecc_get_key(pub_expt, &pubkeysize, PK_PUBLIC, &pubkey);
+    }
+    if (err != CRYPT_OK) {
        ecc_free(&pubkey);
        goto LBL_ERR;
     }
