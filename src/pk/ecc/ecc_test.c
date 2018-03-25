@@ -21,7 +21,7 @@ int ecc_test(void)
    /* the main ECC tests are in tests/ecc_test.c
     * this function is kept just for API compatibility
     */
-   return CRYPT_OK;
+   return CRYPT_NOP;
 }
 
 #endif
