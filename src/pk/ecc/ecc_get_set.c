@@ -11,14 +11,14 @@
 
 #ifdef LTC_MECC
 
-int ecc_get_set_by_name(const char* name, const ltc_ecc_curve** dp)
+int ecc_get_curve_by_name(const char* name, const ltc_ecc_curve** cu)
 {
    int i;
 
-   LTC_ARGCHK(dp != NULL);
+   LTC_ARGCHK(cu != NULL);
    LTC_ARGCHK(name != NULL);
 
-   *dp = NULL;
+   *cu = NULL;
 
    for (i = 0; ltc_ecc_curves[i].name != NULL; i++) {
       if (XSTRCMP(ltc_ecc_curves[i].name, name) == 0) break;
@@ -29,7 +29,7 @@ int ecc_get_set_by_name(const char* name, const ltc_ecc_curve** dp)
       return CRYPT_INVALID_ARG;
    }
 
-   *dp = &ltc_ecc_curves[i];
+   *cu = &ltc_ecc_curves[i];
    return CRYPT_OK;
 }
 
