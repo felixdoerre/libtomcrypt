@@ -26,7 +26,7 @@ int ecc_ansi_x963_import(const unsigned char *in, unsigned long inlen, ecc_key *
    return ecc_ansi_x963_import_ex(in, inlen, key, NULL);
 }
 
-int ecc_ansi_x963_import_ex(const unsigned char *in, unsigned long inlen, ecc_key *key, const ltc_ecc_set_type *dp)
+int ecc_ansi_x963_import_ex(const unsigned char *in, unsigned long inlen, ecc_key *key, const ltc_ecc_curve *dp)
 {
    int err;
 

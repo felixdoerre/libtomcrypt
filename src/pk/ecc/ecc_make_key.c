@@ -33,7 +33,7 @@ int ecc_make_key(prng_state *prng, int wprng, int keysize, ecc_key *key)
    return CRYPT_OK;
 }
 
-int ecc_make_key_ex(prng_state *prng, int wprng, ecc_key *key, const ltc_ecc_set_type *dp)
+int ecc_make_key_ex(prng_state *prng, int wprng, ecc_key *key, const ltc_ecc_curve *dp)
 {
    int err;
    if ((err = ecc_set_dp(dp, key)) != CRYPT_OK)                { return err; }

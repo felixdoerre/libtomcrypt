@@ -36,7 +36,7 @@ int ecc_import(const unsigned char *in, unsigned long inlen, ecc_key *key)
   @param dp      pointer to user supplied params; must be the same as the params used when exporting
   @return CRYPT_OK if successful, upon error all allocated memory will be freed
 */
-int ecc_import_ex(const unsigned char *in, unsigned long inlen, ecc_key *key, const ltc_ecc_set_type *dp)
+int ecc_import_ex(const unsigned char *in, unsigned long inlen, ecc_key *key, const ltc_ecc_curve *dp)
 {
    unsigned long key_size;
    unsigned char flags[1];

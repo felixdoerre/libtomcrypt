@@ -285,7 +285,7 @@ typedef struct {
    /** The OID */
    unsigned long oid[16];
    unsigned long oidlen;
-} ltc_ecc_set_type;
+} ltc_ecc_curve;
 
 /** A point on a ECC curve, stored in Jacbobian format such that (x,y,z) => (x/z^2, y/z^3, 1) when interpretted as affine */
 typedef struct {
@@ -336,29 +336,29 @@ typedef struct {
 } ecc_key;
 
 /** the ECC params provided */
-extern const ltc_ecc_set_type ltc_ecc_sets[];
+extern const ltc_ecc_curve ltc_ecc_curves[];
 
 int  ecc_test(void);
 void ecc_sizes(int *low, int *high);
 int  ecc_get_size(ecc_key *key);
 
-int  ecc_get_set_by_name(const char* name, const ltc_ecc_set_type** dp);
-int  ecc_set_dp(const ltc_ecc_set_type *set, ecc_key *key);
+int  ecc_get_set_by_name(const char* name, const ltc_ecc_curve** dp);
+int  ecc_set_dp(const ltc_ecc_curve *set, ecc_key *key);
 int  ecc_generate_key(prng_state *prng, int wprng, ecc_key *key);
 int  ecc_set_key(const unsigned char *in, unsigned long inlen, int type, ecc_key *key);
 int  ecc_get_key(unsigned char *out, unsigned long *outlen, int type, ecc_key *key);
 
 int  ecc_make_key(prng_state *prng, int wprng, int keysize, ecc_key *key);
-int  ecc_make_key_ex(prng_state *prng, int wprng, ecc_key *key, const ltc_ecc_set_type *dp);
+int  ecc_make_key_ex(prng_state *prng, int wprng, ecc_key *key, const ltc_ecc_curve *dp);
 void ecc_free(ecc_key *key);
 
 int  ecc_export(unsigned char *out, unsigned long *outlen, int type, ecc_key *key);
 int  ecc_import(const unsigned char *in, unsigned long inlen, ecc_key *key);
-int  ecc_import_ex(const unsigned char *in, unsigned long inlen, ecc_key *key, const ltc_ecc_set_type *dp);
+int  ecc_import_ex(const unsigned char *in, unsigned long inlen, ecc_key *key, const ltc_ecc_curve *dp);
 
 int ecc_ansi_x963_export(ecc_key *key, unsigned char *out, unsigned long *outlen);
 int ecc_ansi_x963_import(const unsigned char *in, unsigned long inlen, ecc_key *key);
-int ecc_ansi_x963_import_ex(const unsigned char *in, unsigned long inlen, ecc_key *key, const ltc_ecc_set_type *dp);
+int ecc_ansi_x963_import_ex(const unsigned char *in, unsigned long inlen, ecc_key *key, const ltc_ecc_curve *dp);
 
 int  ecc_shared_secret(ecc_key *private_key, ecc_key *public_key,
                        unsigned char *out, unsigned long *outlen);

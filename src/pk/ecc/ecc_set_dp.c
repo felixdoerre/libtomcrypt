@@ -11,7 +11,7 @@
 
 #ifdef LTC_MECC
 
-int ecc_set_dp(const ltc_ecc_set_type *set, ecc_key *key)
+int ecc_set_dp(const ltc_ecc_curve *set, ecc_key *key)
 {
    unsigned long i;
    int err;
@@ -50,7 +50,7 @@ error:
 
 int ecc_set_dp_size(int size, ecc_key *key)
 {
-   const ltc_ecc_set_type *dp = NULL;
+   const ltc_ecc_curve *dp = NULL;
    int err;
 
    /* for compatibility with libtomcrypt-1.17 the sizes below must match the specific curves */

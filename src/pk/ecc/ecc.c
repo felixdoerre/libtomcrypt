@@ -23,7 +23,7 @@
  *   - ANS X9.62 (named: PRIMEP*)
  *   - http://www.ecc-brainpool.org/download/Domain-parameters.pdf (named: BRAINPOOLP*)
  */
-const ltc_ecc_set_type ltc_ecc_sets[] = {
+const ltc_ecc_curve ltc_ecc_curves[] = {
 #if defined(LTC_ECC_SECP112R1) || defined(LTC_ECC112)
 {
   /* curve name */ "SECP112R1",

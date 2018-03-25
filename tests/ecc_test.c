@@ -55,17 +55,17 @@ static int _ecc_test_shamir(void)
 
    for (x = 0; x < (int)(sizeof(sizes)/sizeof(sizes[0])); x++) {
        /* get the base point */
-       for (z = 0; ltc_ecc_sets[z].name != NULL; z++) {
-           DO(mp_read_radix(modulus, ltc_ecc_sets[z].prime, 16));
+       for (z = 0; ltc_ecc_curves[z].name != NULL; z++) {
+           DO(mp_read_radix(modulus, ltc_ecc_curves[z].prime, 16));
            if (sizes[x] <= mp_unsigned_bin_size(modulus)) break;
        }
-       LTC_ARGCHK(ltc_ecc_sets[z].name != NULL);
+       LTC_ARGCHK(ltc_ecc_curves[z].name != NULL);
 
        /* load it */
-       DO(mp_read_radix(G->x, ltc_ecc_sets[z].Gx, 16));
-       DO(mp_read_radix(G->y, ltc_ecc_sets[z].Gy, 16));
+       DO(mp_read_radix(G->x, ltc_ecc_curves[z].Gx, 16));
+       DO(mp_read_radix(G->y, ltc_ecc_curves[z].Gy, 16));
        DO(mp_set(G->z, 1));
-       DO(mp_read_radix(a, ltc_ecc_sets[z].A, 16));
+       DO(mp_read_radix(a, ltc_ecc_curves[z].A, 16));
        DO(mp_montgomery_setup(modulus, &mp));
        DO(mp_montgomery_normalization(mu, modulus));
        DO(mp_mulmod(a, mu, modulus, ma));
@@ -122,7 +122,7 @@ static int _ecc_issue108(void)
    void      *a, *modulus, *order;
    ecc_point *Q, *Result;
    int       err;
-   const ltc_ecc_set_type* dp;
+   const ltc_ecc_curve* dp;
 
    /* init */
    if ((err = mp_init_multi(&modulus, &order, &a, NULL)) != CRYPT_OK) { return err; }
@@ -170,10 +170,10 @@ static int _ecc_test_mp(void)
       return CRYPT_MEM;
    }
 
-   for (i = 0; ltc_ecc_sets[i].name != NULL; i++) {
-      if ((err = mp_read_radix(a, (char *)ltc_ecc_sets[i].A,  16)) != CRYPT_OK)            { goto done; }
-      if ((err = mp_read_radix(modulus, (char *)ltc_ecc_sets[i].prime, 16)) != CRYPT_OK)   { goto done; }
-      if ((err = mp_read_radix(order, (char *)ltc_ecc_sets[i].order, 16)) != CRYPT_OK)     { goto done; }
+   for (i = 0; ltc_ecc_curves[i].name != NULL; i++) {
+      if ((err = mp_read_radix(a, (char *)ltc_ecc_curves[i].A,  16)) != CRYPT_OK)            { goto done; }
+      if ((err = mp_read_radix(modulus, (char *)ltc_ecc_curves[i].prime, 16)) != CRYPT_OK)   { goto done; }
+      if ((err = mp_read_radix(order, (char *)ltc_ecc_curves[i].order, 16)) != CRYPT_OK)     { goto done; }
 
       /* is prime actually prime? */
       if ((err = mp_prime_is_prime(modulus, 8, &primality)) != CRYPT_OK)                   { goto done; }
@@ -189,8 +189,8 @@ static int _ecc_test_mp(void)
          goto done;
       }
 
-      if ((err = mp_read_radix(G->x, (char *)ltc_ecc_sets[i].Gx, 16)) != CRYPT_OK)         { goto done; }
-      if ((err = mp_read_radix(G->y, (char *)ltc_ecc_sets[i].Gy, 16)) != CRYPT_OK)         { goto done; }
+      if ((err = mp_read_radix(G->x, (char *)ltc_ecc_curves[i].Gx, 16)) != CRYPT_OK)       { goto done; }
+      if ((err = mp_read_radix(G->y, (char *)ltc_ecc_curves[i].Gy, 16)) != CRYPT_OK)       { goto done; }
       mp_set(G->z, 1);
 
       /* then we should have G == (order + 1)G */
@@ -436,7 +436,7 @@ int _ecc_new_api(void)
 #endif
    };
    int i, j, stat;
-   const ltc_ecc_set_type* dp;
+   const ltc_ecc_curve* dp;
    ecc_key key, privkey, pubkey;
    unsigned char buf[1000];
    unsigned long len;
