@@ -355,6 +355,8 @@ int _ecc_new_api(void)
    const char* names[] = {
 #if defined(LTC_ECC_SECP112R1) || defined(LTC_ECC112)
       "SECP112R1",
+      "secp112r1",              /* name is case-insensitive */
+      "S E C-P-1_1_2r1",        /* should pass fuzzy matching */
 #endif
 #ifdef LTC_ECC_SECP112R2
       "SECP112R2",
