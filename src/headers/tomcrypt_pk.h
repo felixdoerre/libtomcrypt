@@ -400,6 +400,8 @@ int ecc_set_dp_by_size(int size, ecc_key *key);
 /* low level functions */
 ecc_point *ltc_ecc_new_point(void);
 void       ltc_ecc_del_point(ecc_point *p);
+int        ltc_ecc_set_point_xyz(ltc_mp_digit x, ltc_mp_digit y, ltc_mp_digit z, ecc_point *p);
+int        ltc_ecc_copy_point(const ecc_point *src, ecc_point *dst);
 int        ltc_ecc_is_point(const ltc_ecc_dp *dp, void *x, void *y);
 int        ltc_ecc_is_point_at_infinity(const ecc_point *P, void *modulus, int *retval);
 int        ltc_ecc_import_point(const unsigned char *in, unsigned long inlen, void *prime, void *a, void *b, void *x, void *y);

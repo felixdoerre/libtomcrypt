@@ -81,9 +81,7 @@ int ecc_copy_dp(const ecc_key *srckey, ecc_key *key)
    if ((err = mp_copy(srckey->dp.order,  key->dp.order )) != CRYPT_OK) { goto error; }
    if ((err = mp_copy(srckey->dp.A,      key->dp.A     )) != CRYPT_OK) { goto error; }
    if ((err = mp_copy(srckey->dp.B,      key->dp.B     )) != CRYPT_OK) { goto error; }
-   if ((err = mp_copy(srckey->dp.base.x, key->dp.base.x)) != CRYPT_OK) { goto error; }
-   if ((err = mp_copy(srckey->dp.base.y, key->dp.base.y)) != CRYPT_OK) { goto error; }
-   if ((err = mp_copy(srckey->dp.base.z, key->dp.base.z)) != CRYPT_OK) { goto error; }
+   if ((err = ltc_ecc_copy_point(&srckey->dp.base, &key->dp.base)) != CRYPT_OK) { goto error; }
    /* cofactor & size */
    key->dp.cofactor = srckey->dp.cofactor;
    key->dp.size     = srckey->dp.size;
