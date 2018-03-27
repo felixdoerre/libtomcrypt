@@ -676,8 +676,8 @@ void ecc_gen(void)
    mp_init(&modulus);
    mp_init(&a);
 
-   for (x = 0; ltc_ecc_curves[x].name != NULL; x++) {
-        fprintf(out, "%s\n", ltc_ecc_curves[x].name);
+   for (x = 0; ltc_ecc_curves[x].prime != NULL; x++) {
+        fprintf(out, "%s\n", ltc_ecc_curves[x].names[0]);
         mp_set(k, 1);
 
         mp_read_radix(order,   (char *)ltc_ecc_curves[x].order, 16);
