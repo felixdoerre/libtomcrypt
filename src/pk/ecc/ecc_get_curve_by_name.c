@@ -16,10 +16,10 @@ static int _name_match(const char *left, const char *right)
 {
    char lc_r, lc_l;
 
-   while ((*left != 0) && (*right != 0)) {
+   while ((*left != '\0') && (*right != '\0')) {
       while ((*left  == ' ') || (*left  == '-') || (*left  == '_')) left++;
       while ((*right == ' ') || (*right == '-') || (*right == '_')) right++;
-      if (*left == 0 || *right == 0) break;
+      if (*left == '\0' || *right == '\0') break;
       lc_r = *right;
       lc_l = *left;
       if ((lc_r >= 'A') && (lc_r <= 'Z')) lc_r += 32;
@@ -29,7 +29,7 @@ static int _name_match(const char *left, const char *right)
       right++;
    }
 
-   if ((*left == 0) && (*right == 0))
+   if ((*left == '\0') && (*right == '\0'))
       return 1;
    else
       return 0;
