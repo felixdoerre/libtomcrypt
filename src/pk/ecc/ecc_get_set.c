@@ -20,17 +20,14 @@ int ecc_get_curve_by_name(const char* name, const ltc_ecc_curve** cu)
 
    *cu = NULL;
 
-   for (i = 0; ltc_ecc_curves[i].name != NULL; i++) {
-      if (XSTRCMP(ltc_ecc_curves[i].name, name) == 0) break;
+   for (i = 0; ltc_ecc_curves[i].prime != NULL; i++) {
+      if (XSTRCMP(ltc_ecc_curves[i].name, name) == 0) {
+         *cu = &ltc_ecc_curves[i];
+         return CRYPT_OK;
+      };
    }
 
-   if (ltc_ecc_curves[i].name == NULL) {
-      /* not found */
-      return CRYPT_INVALID_ARG;
-   }
-
-   *cu = &ltc_ecc_curves[i];
-   return CRYPT_OK;
+   return CRYPT_INVALID_ARG; /* not found */
 }
 
 #endif

@@ -55,11 +55,11 @@ static int _ecc_test_shamir(void)
 
    for (x = 0; x < (int)(sizeof(sizes)/sizeof(sizes[0])); x++) {
        /* get the base point */
-       for (z = 0; ltc_ecc_curves[z].name != NULL; z++) {
+       for (z = 0; ltc_ecc_curves[z].prime != NULL; z++) {
            DO(mp_read_radix(modulus, ltc_ecc_curves[z].prime, 16));
            if (sizes[x] <= mp_unsigned_bin_size(modulus)) break;
        }
-       LTC_ARGCHK(ltc_ecc_curves[z].name != NULL);
+       LTC_ARGCHK(ltc_ecc_curves[z].prime != NULL);
 
        /* load it */
        DO(mp_read_radix(G->x, ltc_ecc_curves[z].Gx, 16));
@@ -170,7 +170,7 @@ static int _ecc_test_mp(void)
       return CRYPT_MEM;
    }
 
-   for (i = 0; ltc_ecc_curves[i].name != NULL; i++) {
+   for (i = 0; ltc_ecc_curves[i].prime != NULL; i++) {
       if ((err = mp_read_radix(a, (char *)ltc_ecc_curves[i].A,  16)) != CRYPT_OK)            { goto done; }
       if ((err = mp_read_radix(modulus, (char *)ltc_ecc_curves[i].prime, 16)) != CRYPT_OK)   { goto done; }
       if ((err = mp_read_radix(order, (char *)ltc_ecc_curves[i].order, 16)) != CRYPT_OK)     { goto done; }
