@@ -259,7 +259,7 @@ int dh_check_pubkey(const dh_key *key);
 /** Structure defines a GF(p) curve */
 typedef struct {
    /** name of curve */
-   const char *name;
+   const char *names[6];
 
    /** The prime that defines the field the curve is in (encoded in hex) */
    const char *prime;

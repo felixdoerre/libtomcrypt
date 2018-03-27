@@ -354,7 +354,7 @@ int _ecc_new_api(void)
 {
    const char* names[] = {
 #if defined(LTC_ECC_SECP112R1) || defined(LTC_ECC112)
-      "SECP112R1",
+      "SECP112R1", "ECC-112",
       "secp112r1",              /* name is case-insensitive */
       "S E C-P-1_1_2r1",        /* should pass fuzzy matching */
 #endif
@@ -362,13 +362,13 @@ int _ecc_new_api(void)
       "SECP112R2",
 #endif
 #if defined(LTC_ECC_SECP128R1) || defined(LTC_ECC128)
-      "SECP128R1",
+      "SECP128R1", "ECC-128",
 #endif
 #ifdef LTC_ECC_SECP128R2
       "SECP128R2",
 #endif
 #if defined(LTC_ECC_SECP160R1) || defined(LTC_ECC160)
-      "SECP160R1",
+      "SECP160R1", "ECC-160",
 #endif
 #ifdef LTC_ECC_SECP160R2
       "SECP160R2",
@@ -380,7 +380,7 @@ int _ecc_new_api(void)
       "BRAINPOOLP160R1",
 #endif
 #if defined(LTC_ECC_SECP192R1) || defined(LTC_ECC192)
-      "SECP192R1",
+      "SECP192R1", "NISTP192", "PRIME192V1", "ECC-192", "P-192",
 #endif
 #ifdef LTC_ECC_PRIME192V2
       "PRIME192V2",
@@ -395,7 +395,7 @@ int _ecc_new_api(void)
       "BRAINPOOLP192R1",
 #endif
 #if defined(LTC_ECC_SECP224R1) || defined(LTC_ECC224)
-      "SECP224R1",
+      "SECP224R1", "NISTP224", "ECC-224", "P-224",
 #endif
 #ifdef LTC_ECC_SECP224K1
       "SECP224K1",
@@ -413,7 +413,7 @@ int _ecc_new_api(void)
       "PRIME239V3",
 #endif
 #if defined(LTC_ECC_SECP256R1) || defined(LTC_ECC256)
-      "SECP256R1",
+      "SECP256R1", "NISTP256", "PRIME256V1", "ECC-256", "P-256",
 #endif
 #ifdef LTC_ECC_SECP256K1
       "SECP256K1",
@@ -425,7 +425,7 @@ int _ecc_new_api(void)
       "BRAINPOOLP320R1",
 #endif
 #if defined(LTC_ECC_SECP384R1) || defined(LTC_ECC384)
-      "SECP384R1",
+      "SECP384R1", "NISTP384", "ECC-384", "P-384",
 #endif
 #ifdef LTC_ECC_BRAINPOOLP384R1
       "BRAINPOOLP384R1",
@@ -434,7 +434,7 @@ int _ecc_new_api(void)
       "BRAINPOOLP512R1",
 #endif
 #if defined(LTC_ECC_SECP521R1) || defined(LTC_ECC521)
-      "SECP521R1",
+      "SECP521R1", "NISTP521", "ECC-521", "P-521",
 #endif
    };
    int i, j, stat;

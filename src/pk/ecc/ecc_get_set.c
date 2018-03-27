@@ -37,7 +37,7 @@ static int _name_match(const char *left, const char *right)
 
 int ecc_get_curve_by_name(const char *name, const ltc_ecc_curve **cu)
 {
-   int i;
+   int i, j;
 
    LTC_ARGCHK(cu != NULL);
    LTC_ARGCHK(name != NULL);
@@ -45,10 +45,12 @@ int ecc_get_curve_by_name(const char *name, const ltc_ecc_curve **cu)
    *cu = NULL;
 
    for (i = 0; ltc_ecc_curves[i].prime != NULL; i++) {
-      if (_name_match(ltc_ecc_curves[i].name, name)) {
-         *cu = &ltc_ecc_curves[i];
-         return CRYPT_OK;
-      };
+      for (j = 0; ltc_ecc_curves[i].names[j] != NULL; j++) {
+         if (_name_match(ltc_ecc_curves[i].names[j], name)) {
+            *cu = &ltc_ecc_curves[i];
+            return CRYPT_OK;
+         }
+      }
    }
 
    return CRYPT_INVALID_ARG; /* not found */
