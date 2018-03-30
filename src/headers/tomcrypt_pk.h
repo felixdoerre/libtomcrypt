@@ -258,9 +258,6 @@ int dh_check_pubkey(const dh_key *key);
 
 /** Structure defines a GF(p) curve */
 typedef struct {
-   /** name of curve */
-   const char *names[6];
-
    /** The prime that defines the field the curve is in (encoded in hex) */
    const char *prime;
 
@@ -283,8 +280,7 @@ typedef struct {
    unsigned long cofactor;
 
    /** The OID */
-   unsigned long oid[16];
-   unsigned long oidlen;
+   const char *OID;
 } ltc_ecc_curve;
 
 /** A point on a ECC curve, stored in Jacbobian format such that (x,y,z) => (x/z^2, y/z^3, 1) when interpretted as affine */
