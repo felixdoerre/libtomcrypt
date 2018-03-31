@@ -42,6 +42,8 @@ typedef struct Oid {
 } oid_st;
 
 int pk_get_oid(int pk, oid_st *st);
+int pk_oid_str_to_num(const char *OID, unsigned long *oid, unsigned long *oidlen);
+int pk_oid_num_to_str(unsigned long *oid, unsigned long oidlen, char *OID, unsigned long *outlen);
 #endif /* LTC_SOURCE */
 
 /* ---- RSA ---- */

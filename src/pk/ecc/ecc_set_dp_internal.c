@@ -11,66 +11,56 @@
 
 #ifdef LTC_MECC
 
+static int _ecc_cmp_hex_bn(const char *left_hex, void *right_bn)
+{
+   void *bn;
+   int match = 0;
+   if (mp_init(&bn) != CRYPT_OK)                    return 0;
+   if (mp_read_radix(bn, left_hex, 16) != CRYPT_OK) goto error;
+   if (mp_cmp(bn, right_bn) != LTC_MP_EQ)           goto error;
+   match = 1;
+error:
+   mp_clear(bn);
+   return match;
+}
+
 static void _ecc_oid_lookup(ecc_key *key)
 {
-   int err;
-   unsigned i, j;
-   void *tmp;
    const ltc_ecc_curve *curve;
 
    key->dp.oidlen = 0;
-   if ((err = mp_init(&tmp)) != CRYPT_OK) return;
    for (curve = ltc_ecc_curves; curve->prime != NULL; curve++) {
-      if ((err = mp_read_radix(tmp, curve->prime, 16)) != CRYPT_OK) continue;
-      if ((mp_cmp(tmp, key->dp.prime) != LTC_MP_EQ))                continue;
-      if ((err = mp_read_radix(tmp, curve->order, 16)) != CRYPT_OK) continue;
-      if ((mp_cmp(tmp, key->dp.order) != LTC_MP_EQ))                continue;
-      if ((err = mp_read_radix(tmp, curve->A,     16)) != CRYPT_OK) continue;
-      if ((mp_cmp(tmp, key->dp.A) != LTC_MP_EQ))                    continue;
-      if ((err = mp_read_radix(tmp, curve->B,     16)) != CRYPT_OK) continue;
-      if ((mp_cmp(tmp, key->dp.B) != LTC_MP_EQ))                    continue;
-      if ((err = mp_read_radix(tmp, curve->Gx,    16)) != CRYPT_OK) continue;
-      if ((mp_cmp(tmp, key->dp.base.x) != LTC_MP_EQ))               continue;
-      if ((err = mp_read_radix(tmp, curve->Gy,    16)) != CRYPT_OK) continue;
-      if ((mp_cmp(tmp, key->dp.base.y) != LTC_MP_EQ))               continue;
-      if (key->dp.cofactor != curve->cofactor)                      continue;
+      if (_ecc_cmp_hex_bn(curve->prime, key->dp.prime)  != 1) continue;
+      if (_ecc_cmp_hex_bn(curve->order, key->dp.order)  != 1) continue;
+      if (_ecc_cmp_hex_bn(curve->A,     key->dp.A)      != 1) continue;
+      if (_ecc_cmp_hex_bn(curve->B,     key->dp.B)      != 1) continue;
+      if (_ecc_cmp_hex_bn(curve->Gx,    key->dp.base.x) != 1) continue;
+      if (_ecc_cmp_hex_bn(curve->Gy,    key->dp.base.y) != 1) continue;
+      if (key->dp.cofactor != curve->cofactor)                continue;
       break; /* found */
    }
-   mp_clear(tmp);
-   if (curve->OID != NULL) {
-      for (i = 0, j = 0; i < strlen(curve->OID); i++) {
-         if (curve->OID[i] == '.') {
-            if (++j >= 16) return;
-         }
-         else if ((curve->OID[i] >= '0') && (curve->OID[i] <= '9')) {
-            key->dp.oid[j] = key->dp.oid[j] * 10 + (curve->OID[i] - '0');
-         }
-         else {
-            return;
-         }
-      }
-      if (j > 0) key->dp.oidlen = j + 1;
+   if (curve->prime && curve->OID) {
+      key->dp.oidlen = 16; /* size of key->dp.oid */
+      pk_oid_str_to_num(curve->OID, key->dp.oid, &key->dp.oidlen);
    }
 }
 
-/*
- * int ecc_set_dp_by_oid(unsigned long *oid, unsigned long oidsize, ecc_key *key)
- * {
- *    int i;
- *
- *    LTC_ARGCHK(oid != NULL);
- *    LTC_ARGCHK(oidsize > 0);
- *
- *    for(i = 0; ltc_ecc_curves[i].prime != NULL; i++) {
- *       if ((oidsize == ltc_ecc_curves[i].oidlen) &&
- *           (XMEM_NEQ(oid, ltc_ecc_curves[i].oid, sizeof(unsigned long) * ltc_ecc_curves[i].oidlen) == 0)) {
- *          break;
- *       }
- *    }
- *    if (ltc_ecc_curves[i].prime == NULL) return CRYPT_ERROR;
- *    return ecc_set_dp(&ltc_ecc_curves[i], key);
- * }
- */
+int ecc_set_dp_by_oid(unsigned long *oid, unsigned long oidlen, ecc_key *key)
+{
+   int err;
+   char OID[256];
+   unsigned long outlen;
+   const ltc_ecc_curve *curve;
+
+   LTC_ARGCHK(oid != NULL);
+   LTC_ARGCHK(oidlen > 0);
+
+   outlen = sizeof(OID);
+   if ((err = pk_oid_num_to_str(oid, oidlen, OID, &outlen)) != CRYPT_OK) return err;
+   if ((err = ecc_get_curve_by_name(OID, &curve)) != CRYPT_OK)           return err;
+
+   return ecc_set_dp(curve, key);
+}
 
 int ecc_copy_dp(const ecc_key *srckey, ecc_key *key)
 {
