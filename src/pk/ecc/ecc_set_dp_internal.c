@@ -45,23 +45,6 @@ static void _ecc_oid_lookup(ecc_key *key)
    }
 }
 
-int ecc_set_dp_by_oid(unsigned long *oid, unsigned long oidlen, ecc_key *key)
-{
-   int err;
-   char OID[256];
-   unsigned long outlen;
-   const ltc_ecc_curve *curve;
-
-   LTC_ARGCHK(oid != NULL);
-   LTC_ARGCHK(oidlen > 0);
-
-   outlen = sizeof(OID);
-   if ((err = pk_oid_num_to_str(oid, oidlen, OID, &outlen)) != CRYPT_OK) return err;
-   if ((err = ecc_get_curve_by_name(OID, &curve)) != CRYPT_OK)           return err;
-
-   return ecc_set_dp(curve, key);
-}
-
 int ecc_copy_dp(const ecc_key *srckey, ecc_key *key)
 {
    unsigned long i;

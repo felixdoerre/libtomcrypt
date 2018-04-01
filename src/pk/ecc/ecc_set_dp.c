@@ -13,7 +13,6 @@
 
 int ecc_set_dp(const ltc_ecc_curve *curve, ecc_key *key)
 {
-   unsigned long i, j;
    int err;
 
    LTC_ARGCHK(key != NULL);
@@ -38,31 +37,8 @@ int ecc_set_dp(const ltc_ecc_curve *curve, ecc_key *key)
    key->dp.cofactor = curve->cofactor;
    key->dp.size = mp_unsigned_bin_size(key->dp.prime);
    /* OID string >> unsigned long oid[16] + oidlen */
-   if (curve->OID != NULL) {
-      for (i = 0, j = 0; i < strlen(curve->OID); i++) {
-         if (curve->OID[i] == '.') {
-            if (++j >= 16) {
-               err = CRYPT_ERROR;
-               goto error;
-            }
-         }
-         else if ((curve->OID[i] >= '0') && (curve->OID[i] <= '9')) {
-            key->dp.oid[j] = key->dp.oid[j] * 10 + (curve->OID[i] - '0');
-         }
-         else {
-            err = CRYPT_ERROR;
-            goto error;
-         }
-      }
-      if (j == 0) {
-         err = CRYPT_ERROR;
-         goto error;
-      }
-      key->dp.oidlen = j + 1;
-   }
-   else {
-      key->dp.oidlen = 0;
-   }
+   key->dp.oidlen = 16;
+   if ((err = pk_oid_str_to_num(curve->OID, key->dp.oid, &key->dp.oidlen)) != CRYPT_OK) { goto error; }
    /* success */
    return CRYPT_OK;
 

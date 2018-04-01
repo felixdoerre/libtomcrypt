@@ -391,7 +391,6 @@ int  ecc_verify_hash(const unsigned char *sig,  unsigned long siglen,
 /* INTERNAL ONLY - it should be later moved to src/headers/tomcrypt_internal.h */
 
 int ecc_set_dp_from_mpis(void *a, void *b, void *prime, void *order, void *gx, void *gy, unsigned long cofactor, ecc_key *key);
-int ecc_set_dp_by_oid(unsigned long *oid, unsigned long oidsize, ecc_key *key);
 int ecc_copy_dp(const ecc_key *srckey, ecc_key *key);
 int ecc_set_dp_by_size(int size, ecc_key *key);
 
