@@ -52,19 +52,19 @@ int pk_oid_num_to_str(unsigned long *oid, unsigned long oidlen, char *OID, unsig
    for (i = oidlen - 1, k = 0; i >= 0; i--) {
       j = oid[i];
       if (j == 0) {
-         if (++k >= tmpsz) return CRYPT_ERROR;
          tmp[k] = '0';
+         if (++k >= tmpsz) return CRYPT_ERROR;
       }
       else {
          while (j > 0) {
-            if (++k >= tmpsz) return CRYPT_ERROR;
             tmp[k] = '0' + (j % 10);
+            if (++k >= tmpsz) return CRYPT_ERROR;
             j /= 10;
          }
       }
       if (i > 0) {
-        if (++k >= tmpsz) return CRYPT_ERROR;
         tmp[k] = '.';
+        if (++k >= tmpsz) return CRYPT_ERROR;
       }
    }
    if (*outlen < k + 1) return CRYPT_ERROR;
