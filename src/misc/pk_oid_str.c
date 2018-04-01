@@ -40,24 +40,37 @@ int pk_oid_str_to_num(const char *OID, unsigned long *oid, unsigned long *oidlen
 
 int pk_oid_num_to_str(unsigned long *oid, unsigned long oidlen, char *OID, unsigned long *outlen)
 {
-   unsigned i;
-   int r, sz;
-   char *s;
+   int i;
+   unsigned long j, k;
+   char tmp[256] = { 0 };
+   unsigned long tmpsz = sizeof(tmp);
 
    LTC_ARGCHK(oid != NULL);
    LTC_ARGCHK(OID != NULL);
    LTC_ARGCHK(outlen != NULL);
 
-   s = OID;
-   sz = *outlen;
-   for (i = 0; i < oidlen; ++i) {
-      r = snprintf(s, sz, "%lu.", oid[i]);
-      if (r < 0 || r >= sz) return CRYPT_ERROR;
-      s += r;
-      sz -= r;
+   for (i = oidlen - 1, k = 0; i >= 0; i--) {
+      j = oid[i];
+      if (j == 0) {
+         if (++k >= tmpsz) return CRYPT_ERROR;
+         tmp[k] = '0';
+      }
+      else {
+         while (j > 0) {
+            if (++k >= tmpsz) return CRYPT_ERROR;
+            tmp[k] = '0' + (j % 10);
+            j /= 10;
+         }
+      }
+      if (i > 0) {
+        if (++k >= tmpsz) return CRYPT_ERROR;
+        tmp[k] = '.';
+      }
    }
-   *(s - 1) = '\0';       /* replace the last . with a \0 */
-   *outlen = s - OID - 1; /* the length without terminating NUL byte */
+   if (*outlen < k + 1) return CRYPT_ERROR;
+   for (j = 0; j < k; j++) OID[j] = tmp[k - j - 1];
+   OID[k] = '\0';
+   *outlen = k; /* the length without terminating NUL byte */
    return CRYPT_OK;
 }
 
