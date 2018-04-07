@@ -11,34 +11,31 @@
 
 #ifdef LTC_MECC
 
-static int _ecc_cmp_hex_bn(const char *left_hex, void *right_bn)
+static int _ecc_cmp_hex_bn(const char *left_hex, void *right_bn, void *tmp_bn)
 {
-   void *bn;
-   int match = 0;
-   if (mp_init(&bn) != CRYPT_OK)                    return 0;
-   if (mp_read_radix(bn, left_hex, 16) != CRYPT_OK) goto error;
-   if (mp_cmp(bn, right_bn) != LTC_MP_EQ)           goto error;
-   match = 1;
-error:
-   mp_clear(bn);
-   return match;
+   if (mp_read_radix(tmp_bn, left_hex, 16) != CRYPT_OK) return 0;
+   if (mp_cmp(tmp_bn, right_bn) != LTC_MP_EQ)           return 0;
+   return 1;
 }
 
 static void _ecc_oid_lookup(ecc_key *key)
 {
+   void *bn;
    const ltc_ecc_curve *curve;
 
    key->dp.oidlen = 0;
+   if (mp_init(&bn) != CRYPT_OK) return;
    for (curve = ltc_ecc_curves; curve->prime != NULL; curve++) {
-      if (_ecc_cmp_hex_bn(curve->prime, key->dp.prime)  != 1) continue;
-      if (_ecc_cmp_hex_bn(curve->order, key->dp.order)  != 1) continue;
-      if (_ecc_cmp_hex_bn(curve->A,     key->dp.A)      != 1) continue;
-      if (_ecc_cmp_hex_bn(curve->B,     key->dp.B)      != 1) continue;
-      if (_ecc_cmp_hex_bn(curve->Gx,    key->dp.base.x) != 1) continue;
-      if (_ecc_cmp_hex_bn(curve->Gy,    key->dp.base.y) != 1) continue;
-      if (key->dp.cofactor != curve->cofactor)                continue;
+      if (_ecc_cmp_hex_bn(curve->prime, key->dp.prime,  bn) != 1) continue;
+      if (_ecc_cmp_hex_bn(curve->order, key->dp.order,  bn) != 1) continue;
+      if (_ecc_cmp_hex_bn(curve->A,     key->dp.A,      bn) != 1) continue;
+      if (_ecc_cmp_hex_bn(curve->B,     key->dp.B,      bn) != 1) continue;
+      if (_ecc_cmp_hex_bn(curve->Gx,    key->dp.base.x, bn) != 1) continue;
+      if (_ecc_cmp_hex_bn(curve->Gy,    key->dp.base.y, bn) != 1) continue;
+      if (key->dp.cofactor != curve->cofactor)                    continue;
       break; /* found */
    }
+   mp_clear(bn);
    if (curve->prime && curve->OID) {
       key->dp.oidlen = 16; /* size of key->dp.oid */
       pk_oid_str_to_num(curve->OID, key->dp.oid, &key->dp.oidlen);
