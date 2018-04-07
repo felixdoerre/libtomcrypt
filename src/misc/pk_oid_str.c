@@ -67,7 +67,10 @@ int pk_oid_num_to_str(unsigned long *oid, unsigned long oidlen, char *OID, unsig
         if (++k >= tmpsz) return CRYPT_ERROR;
       }
    }
-   if (*outlen < k + 1) return CRYPT_ERROR;
+   if (*outlen < k + 1) {
+      *outlen = k + 1;
+      return CRYPT_BUFFER_OVERFLOW;
+   }
    for (j = 0; j < k; j++) OID[j] = tmp[k - j - 1];
    OID[k] = '\0';
    *outlen = k; /* the length without terminating NUL byte */
