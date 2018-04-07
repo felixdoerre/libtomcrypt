@@ -214,22 +214,22 @@ static int _name_match(const char *left, const char *right)
       return 0;
 }
 
-int ecc_get_curve(const char *name, const ltc_ecc_curve **cu)
+int ecc_get_curve(const char *name_or_oid, const ltc_ecc_curve **cu)
 {
    int i, j;
    const char *OID = NULL;
 
    LTC_ARGCHK(cu != NULL);
-   LTC_ARGCHK(name != NULL);
+   LTC_ARGCHK(name_or_oid != NULL);
 
    *cu = NULL;
 
    for (i = 0; _curve_names[i].OID != NULL && !OID; i++) {
-      if (XSTRCMP(_curve_names[i].OID, name) == 0) {
+      if (XSTRCMP(_curve_names[i].OID, name_or_oid) == 0) {
          OID = _curve_names[i].OID;
       }
       for (j = 0; _curve_names[i].names[j] != NULL && !OID; j++) {
-         if (_name_match(_curve_names[i].names[j], name)) {
+         if (_name_match(_curve_names[i].names[j], name_or_oid)) {
             OID = _curve_names[i].OID;
          }
       }
