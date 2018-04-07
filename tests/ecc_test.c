@@ -130,7 +130,7 @@ static int _ecc_issue108(void)
    Result = ltc_ecc_new_point();
 
    /* ECC-224 AKA SECP224R1 */
-   if ((err = ecc_get_curve_by_name("SECP224R1", &dp)) != CRYPT_OK)       { goto done; }
+   if ((err = ecc_get_curve("SECP224R1", &dp)) != CRYPT_OK)               { goto done; }
    /* read A */
    if ((err = mp_read_radix(a, (char *)dp->A,  16)) != CRYPT_OK)          { goto done; }
    /* read modulus */
@@ -448,7 +448,7 @@ int _ecc_new_api(void)
    if (ltc_mp.name == NULL) return CRYPT_NOP;
 
    for (i = 0; i < (int)(sizeof(names)/sizeof(names[0])); i++) {
-      DO(ecc_get_curve_by_name(names[i], &dp));
+      DO(ecc_get_curve(names[i], &dp));
       /* make new key */
       DO(ecc_make_key_ex(&yarrow_prng, find_prng ("yarrow"), &key, dp));
       len = sizeof(buf);
